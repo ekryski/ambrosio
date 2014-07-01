@@ -4,17 +4,17 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['emitter'], factory);
+    define(['emitter', 'lodash'], factory);
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(require('emitter'));
+    module.exports = factory(require('emitter'), require('lodash'));
   } else {
     // Browser globals (root is window)
-    root.returnExports = factory(root.Emitter);
+    root.returnExports = factory(root.Emitter, root.Lodash);
   }
-}(this, function (Emitter) {
+}(this, function (Emitter, _) {
 
   try {
     var storage = window.localStorage;
@@ -133,7 +133,7 @@
   Ambrosio.prototype.compute = function(name, callback) {
     // NOTE: I want something clean instead of passing the computed 
     // attribute in the function
-    var str = callback.tostring();
+    var str = callback.toString();
     var attrs = str.match(/this.[a-zA-Z0-9]*/g);
 
     this.set(name, callback.call(this.data)); //TODO: refactor (may be use replace)
@@ -170,9 +170,10 @@
 
     this.emit('reset');
     //set new attributes
-    _.each(data, function(val, key){
-      this.set(val, key, originalData);
-    }, this);
+    
+    for (var key in data) {
+      this.set(data[key], key, originalData);
+    }
   };
 
   /**
@@ -284,26 +285,7 @@
     return data;
   };
 
-  Ambrosio.prototype.extend = function(properties){
-    mixin(this, properties);
-  };
-
-  /**
-   * Mixin a given set of properties
-   * @param obj The object to add the mixed in properties
-   * @param properties The properties to mix in
-   */
-  var mixin = function(obj, properties) {
-    properties = properties || {};
-
-    for (var key in properties) {
-      obj[key] = properties[key];
-    }
-
-    return obj;
-  };
-
-  mixin(Ambrosio.prototype, Emitter.prototype);
+  _.mixin(Ambrosio.prototype, Emitter.prototype);
     
   return Ambrosio;
 }));

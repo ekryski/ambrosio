@@ -178,16 +178,16 @@ describe('computed attributes', function(){
   beforeEach(function(){
     model = new Model();
     model.set('firstname', 'Alessandra');
-    model.set('lastname', 'wietrich');
+    model.set('lastname', 'Ambrosio');
   });
   it('should compute multiple attributes', function(){
     model.compute('name', function(){
       return this.firstname + ' ' + this.lastname;
     });
-    assert('Alessandra wietrich' === model.get('name'));
+    assert('Alessandra Ambrosio' === model.get('name'));
   });
 
-  it('should listen change on a computed attribute', function(){
+  it('should listen for change on a computed attribute', function(){
     var obj = {};
     model.compute('name', function(){
       return this.firstname + ' ' + this.lastname;
@@ -198,9 +198,9 @@ describe('computed attributes', function(){
       obj.value = value;
     });
 
-    model.set('firstname', 'nicolas');
+    model.set('firstname', 'Angel');
 
-    assert('nicolas wietrich' === model.get('name'));
+    assert('Angel Ambrosio' === model.get('name'));
   });
 });
 
