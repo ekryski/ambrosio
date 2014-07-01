@@ -73,56 +73,56 @@ describe('General', function(){
         });
         model.set('name', 'Angel');
         assert(obj.name[0] === 'Angel');
-        assert(obj.name[1] === 'Alessandra');    
+        assert(obj.name[1] === 'Alessandra');
       });
 
     });
   });
 
-  describe('delete', function(){
+  describe('remove', function(){
     var model = null;
 
     beforeEach(function(){
       model = new Model();
     });
 
-    it('should delete a model attribute', function(){
+    it('should remove a model attribute', function(){
       model.set('name', 'Alessandra');
-      model.del('name');
+      model.remove('name');
       assert(undefined === model.get('name'));
     });
 
-    it("should not delete a model attribute that doesn't exist", function(){
-      model.del('name');
+    it("should not remove a model attribute that doesn't exist", function(){
+      model.remove('name');
       assert(undefined === model.get('name'));
     });
 
-    describe('delete emitter', function(){ //NOTE: is that necessary?
-      it('should emit a deleted event when delete an attribute', function(){
+    describe('remove emitter', function(){ //NOTE: is that necessary?
+      it('should emit a removed event when remove an attribute', function(){
         var model = new Model();
-        var isDeleted = false;
-        var deletedAttr = '';
+        var isRemoved = false;
+        var removedAttr = '';
         model.set('name', 'Alessandra');
-        model.on('deleted', function(name){
-          isDeleted = true;
-          deletedAttr = name;
+        model.on('removed', function(name){
+          isRemoved = true;
+          removedAttr = name;
         });
-        model.del('name');
-        assert(isDeleted === true);
-        assert(deletedAttr === 'name');
+        model.remove('name');
+        assert(isRemoved === true);
+        assert(removedAttr === 'name');
       });
 
-      it("should not emit the deleted event if attribute doesn't exist", function(){
+      it("should not emit the removed event if attribute doesn't exist", function(){
         var model = new Model();
-        var isDeleted = false;
-        var deletedAttr = '';
-        model.on('deleted', function(name){
-          isDeleted = true;
-          deletedAttr = name;
+        var isRemoved = false;
+        var removedAttr = '';
+        model.on('removed', function(name){
+          isRemoved = true;
+          removedAttr = name;
         });
-        model.del('name');
-        assert(isDeleted === false);
-        assert(deletedAttr === '');
+        model.remove('name');
+        assert(isRemoved === false);
+        assert(removedAttr === '');
       });
     });
 
@@ -147,15 +147,15 @@ describe('General', function(){
     });
 
     it('should notify on change', function(){
-      var isDeleted = false;
-      model.on('deleted name', function(){
-        isDeleted = true;
-      }); //TODO: may be spy 
+      var isRemoved = false;
+      model.on('removed name', function(){
+        isRemoved = true;
+      });
       model.reset({
         github:'Angel'
       });
 
-      assert(true === isDeleted);
+      assert(true === isRemoved);
     });
 
   });
@@ -163,14 +163,13 @@ describe('General', function(){
 });
 
 describe('formatter', function(){
-  //NOTE: could we have formatter as plugin in the set function
   it('should return the formatted data', function(){
     var model = new Model();
     model.format('name', function(value){
       return value.toUpperCase();
     });
     model.set('name', 'Alessandra');
-    assert('OLIVIER' === model.get('name'));
+    assert('ALESSANDRA' === model.get('name'));
   });
 });
 
@@ -271,7 +270,7 @@ describe('toObject', function(){
 describe('array like', function(){
   it('should remove an item properly', function(){
     var model = new Model(['item1', 'item2', 'item3']);
-    model.del(0);
+    model.remove(0);
     assert(2 === model.data.length);
   });
 
