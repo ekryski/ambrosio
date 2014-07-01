@@ -27,9 +27,15 @@
    * @api public
    */
 
-  function Ambrosio(data) {
+  function Ambrosio(data, options) {
     if (data instanceof Ambrosio) return data;
     this.data = data || {};
+    this.options = options || {
+      local: 'ambrosio',
+      host: 'localhost:3030',
+      url: '/',
+      autosave: false
+    };
     this.formatters = {};
   }
 
@@ -170,21 +176,79 @@
   };
 
   /**
-   * Synchronize with local storage or backend.
-   * 
-   * @param  {String} name 
-   * @param  {Boolean} bool save in localstore
+   * Fetch data to local storage or backend and population model.
+   *
+   * @param  {string} id - optional callback (optional)
+   * @param  {function} callback - callback (optional)
    * @return {this}
    * @api public
    */
+  
+  Ambrosio.prototype.fetch = function(id, callback) {
 
-  Store.prototype.save = function(name, bool) {
-    //TODO: should we do a clear for .local()?
-    if(!bool) {
-      storage.setItem(name, this.toJSON());
-    } else {
-      this.reset(JSON.parse(storage.getItem(name)));
+    //TODO (EK): Make GET request to REST endpoint
+
+    if (this.local) {
+      this.data = JSON.parse(storage.getItem(this.local));
     }
+
+    return this;
+  };
+
+  /**
+   * Persist data to local storage or backend.
+   *
+   * @param  {function} callback - callback (optional)
+   * @return {this}
+   * @api public
+   */
+  
+  Ambrosio.prototype.create = function(callback) {
+
+    if (this.local) {
+      storage.setItem(this.local, this.toJSON());
+    }
+
+    //TODO (EK): Make POST request to REST endpoint
+
+    return this;
+  };
+
+  /**
+   * Update data in local storage or backend.
+   *
+   * @param  {string} id - optional callback (optional)
+   * @param  {function} callback - optional callback
+   * @return {this}
+   * @api public
+   */
+  Ambrosio.prototype.update = function(id, callback) {
+
+    if (this.local) {
+      storage.setItem(this.local, this.toJSON());
+    }
+
+    //TODO (EK): Make PUT/PATCH request to REST endpoint
+
+    return this;
+  };
+
+  /**
+   * Update data in local storage or backend.
+   *
+   * @param  {string} id - optional callback (optional)
+   * @param  {function} callback - optional callback
+   * @return {this}
+   * @api public
+   */
+  Ambrosio.prototype.destroy = function(id, callback) {
+
+    if (this.local) {
+      storage.setItem(this.local, this.toJSON());
+    }
+
+    //TODO (EK): Make DELETE request to REST endpoint
+
     return this;
   };
 
@@ -220,6 +284,10 @@
     return data;
   };
 
+  Ambrosio.prototype.extend = function(properties){
+    mixin(this, properties);
+  };
+
   /**
    * Mixin a given set of properties
    * @param obj The object to add the mixed in properties
@@ -234,8 +302,6 @@
 
     return obj;
   };
-
-  var extend = mixin;
 
   mixin(Ambrosio.prototype, Emitter.prototype);
     
