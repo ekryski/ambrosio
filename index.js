@@ -4,17 +4,17 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['emitter', 'lodash'], factory);
+    define(['emitter', 'lodash', 'jquery'], factory);
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(require('emitter'), require('lodash'));
+    module.exports = factory(require('emitter'), require('lodash'), require('jquery'));
   } else {
     // Browser globals (root is window)
-    root.returnExports = factory(root.Emitter, root.Lodash);
+    root.returnExports = factory(root.Emitter, root.Lodash, root.jQuery);
   }
-}(this, function (Emitter, _) {
+}(this, function (Emitter, _, $) {
 
   try {
     var storage = window.localStorage;
@@ -30,12 +30,12 @@
   function Ambrosio(data, options) {
     if (data instanceof Ambrosio) return data;
     this.data = data || {};
-    this.options = options || {
+    this.options = _.defaults({}, options, {
       local: 'ambrosio',
-      host: 'localhost:3030',
+      host: window.location.origin,
       url: '/',
       autosave: false
-    };
+    });
     this.formatters = {};
   }
 
@@ -69,6 +69,10 @@
       this.emit('change', name, value, prev);
       this.emit('change ' + name, value, prev);
       this.emit('change:' + name, value, prev);
+
+      if (this.options.autosave) {
+        this.update();
+      }
     }
   };
 
@@ -180,20 +184,40 @@
    * Fetch data to local storage or backend and population model.
    *
    * @param  {string} id - optional callback (optional)
-   * @param  {function} callback - callback (optional)
    * @return {this}
    * @api public
    */
   
-  Ambrosio.prototype.fetch = function(id, callback) {
+  Ambrosio.prototype.fetch = function(id, options) {
 
     //TODO (EK): Make GET request to REST endpoint
+    if (typeof id !== 'string') {
+      options = id;
+      id = null;
+    }
 
     if (this.local) {
       this.data = JSON.parse(storage.getItem(this.local));
     }
 
-    return this;
+    if (this.url) {
+      var url = this.options.host + this.options.url;
+      var self = this;
+
+      $.ajax({
+        data: options,
+        dataType: 'json',
+        url: id ? (url + '/' + id) : url
+      })
+      .done(function(data){
+        console.log('DATA', arguments);
+          
+        self.reset(data);
+      })
+      .fail(function(error){
+        console.log('ERROR', arguments);
+      });
+    }
   };
 
   /**
