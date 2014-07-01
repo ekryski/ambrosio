@@ -9,10 +9,12 @@
     "client"
   ],
   "dependencies": {
-    "component/emitter": "*"
+    "component/emitter": "*",
+    "lodash/lodash": "*"
   },
   "development": {
-    "visionmedia/mocha": "*"
+    "visionmedia/mocha": "*",
+    "component/assert": "*"
   },
   "license": "MIT",
   "main": "index.js",

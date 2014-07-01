@@ -27,9 +27,11 @@
     "tests"
   ],
   "dependencies": {
-    "emitter": "component/emitter#~1.1.2"
+    "emitter": "component/emitter#~1.1.2",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
-    "mocha": "~1.18.2"
+    "mocha": "~1.18.2",
+    "assert": "component/assert#~0.4.0"
   }
 }
