@@ -1,0 +1,26 @@
+{
+  "name": "ambrosio",
+  "description": "A beautiful model... for your client side data",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ekryski/ambrosio.git"
+  },
+  "engines": {
+    "node": "~0.10.0"
+  },
+  "keywords": [
+    "model",
+    "data",
+    "client"
+  ],
+  "devDependencies": {
+    "mocha": "*",
+    "expect.js": "~0.3.1"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "make build"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "ambrosio",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ekryski/ambrosio",
+  "authors": [
+    "Eric Kryski <e.kryski@gmail.com>"
+  ],
+  "description": "A beautiful model... for your client side data",
+  "moduleType": [
+    "globals",
+    "amd",
+    "node"
+  ],
+  "keywords": [
+    "model",
+    "data",
+    "client"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "component.json",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "emitter": "component/emitter#~1.1.2"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "ambrosio",
+  "repo": "ekryski/ambrosio",
+  "description": "A beautiful model... for your client side data",
+  "version": "0.0.1",
+  "keywords": [
+    "model",
+    "data",
+    "client"
+  ],
+  "dependencies": {
+    "component/emitter": "*"
+  },
+  "development": {
+    "visionmedia/mocha": "*"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
