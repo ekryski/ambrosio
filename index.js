@@ -74,6 +74,8 @@
         this.update();
       }
     }
+
+    return this;
   };
 
   /**
@@ -97,12 +99,11 @@
    */
 
   Ambrosio.prototype.remove = function(name) {
-    //TODO:refactor this is ugly
     if(this.has(name)){
       if(this.data instanceof Array){
         this.data.splice(name, 1);
       } else {
-        delete this.data[name]; //NOTE: do we need to return something?
+        delete this.data[name];
       }
       this.emit('removed', name);
       this.emit('removed ' + name);
@@ -172,12 +173,12 @@
       }
     }
 
-    this.emit('reset');
     //set new attributes
-    
     for (var key in data) {
-      this.set(data[key], key, originalData);
+      this.set(key, data[key], originalData);
     }
+
+    this.emit('reset');
   };
 
   /**
@@ -196,11 +197,15 @@
       id = null;
     }
 
-    if (this.local) {
-      this.data = JSON.parse(storage.getItem(this.local));
+    if (this.options.local) {
+      var data = JSON.parse(storage.getItem(this.options.local));
+
+      if (data) {
+        this.reset(data);
+      }
     }
 
-    if (this.url) {
+    if (this.options.url) {
       var url = this.options.host + this.options.url;
       var self = this;
 
@@ -210,8 +215,6 @@
         url: id ? (url + '/' + id) : url
       })
       .done(function(data){
-        console.log('DATA', arguments);
-          
         self.reset(data);
       })
       .fail(function(error){
@@ -228,10 +231,9 @@
    * @api public
    */
   
-  Ambrosio.prototype.create = function(callback) {
-
-    if (this.local) {
-      storage.setItem(this.local, this.toJSON());
+  Ambrosio.prototype.create = function() {
+    if (this.options.local) {
+      storage.setItem(this.options.local, this.toJSON());
     }
 
     //TODO (EK): Make POST request to REST endpoint
@@ -243,14 +245,13 @@
    * Update data in local storage or backend.
    *
    * @param  {string} id - optional callback (optional)
-   * @param  {function} callback - optional callback
    * @return {this}
    * @api public
    */
-  Ambrosio.prototype.update = function(id, callback) {
+  Ambrosio.prototype.update = function(id) {
 
-    if (this.local) {
-      storage.setItem(this.local, this.toJSON());
+    if (this.options.local) {
+      storage.setItem(this.options.local, this.toJSON());
     }
 
     //TODO (EK): Make PUT/PATCH request to REST endpoint
@@ -262,14 +263,13 @@
    * Update data in local storage or backend.
    *
    * @param  {string} id - optional callback (optional)
-   * @param  {function} callback - optional callback
    * @return {this}
    * @api public
    */
-  Ambrosio.prototype.destroy = function(id, callback) {
+  Ambrosio.prototype.destroy = function(id) {
 
     if (this.local) {
-      storage.setItem(this.local, this.toJSON());
+      storage.removeItem(this.options.local);
     }
 
     //TODO (EK): Make DELETE request to REST endpoint
